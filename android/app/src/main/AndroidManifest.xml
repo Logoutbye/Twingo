@@ -11,7 +11,7 @@
    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
    <!-- Add more permission entries as needed -->
    <application
-        android:label="HeyJinni Lite"
+        android:label="Twingo"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

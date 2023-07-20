@@ -30,27 +30,27 @@ class _HomeState extends State<Home> {
   bool _isLoading = true;
   int _progressText = 0; // Variable to track loading state
 
-  late BannerAd _bannerAd;
-  InterstitialAd? _interstialAd;
-  bool isAdLoaded = false;
-  void _createBannerAd() {
-    _bannerAd = BannerAd(
-        size: AdSize.banner,
-        adUnitId: AdsMobServices.BannerAdUnitId!,
-        listener: AdsMobServices.bannerAdListener,
-        request: AdRequest())
-      ..load();
-  }
+  // late BannerAd _bannerAd;
+  // InterstitialAd? _interstialAd;
+  // bool isAdLoaded = false;
+  // void _createBannerAd() {
+  //   _bannerAd = BannerAd(
+  //       size: AdSize.banner,
+  //       adUnitId: AdsMobServices.BannerAdUnitId!,
+  //       listener: AdsMobServices.bannerAdListener,
+  //       request: AdRequest())
+  //     ..load();
+  // }
 
-  void _createInterstitialAd() {
-    InterstitialAd.load(
-        adUnitId: AdsMobServices.InterstitialAdId!,
-        request: AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
-            onAdLoaded: (ad) => _interstialAd = ad,
-            onAdFailedToLoad: (LoadAdError loadAdError) =>
-                _interstialAd = null));
-  }
+  // void _createInterstitialAd() {
+  //   InterstitialAd.load(
+  //       adUnitId: AdsMobServices.InterstitialAdId!,
+  //       request: AdRequest(),
+  //       adLoadCallback: InterstitialAdLoadCallback(
+  //           onAdLoaded: (ad) => _interstialAd = ad,
+  //           onAdFailedToLoad: (LoadAdError loadAdError) =>
+  //               _interstialAd = null));
+  // }
 
   @override
   void initState() {
@@ -60,15 +60,15 @@ class _HomeState extends State<Home> {
     }
     requestPermissions();
     super.initState();
-    _createBannerAd();
-    _createInterstitialAd();
+    // _createBannerAd();
+    // _createInterstitialAd();
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-                  _showInterstitalAd();
+                  // _showInterstitalAd();
 
         bool? goBack =
             await _webViewController.future.then((value) => value.canGoBack());
@@ -148,7 +148,7 @@ class _HomeState extends State<Home> {
             : Stack(
                 children: [
                   WebView(
-                    initialUrl: 'https://heyjinni.com/',
+                    initialUrl: 'https://twigo.date/',
                     javascriptMode: JavascriptMode.unrestricted,
                     onWebViewCreated: (WebViewController webViewController) {
                       _webViewController.complete(webViewController);
@@ -165,28 +165,34 @@ class _HomeState extends State<Home> {
                                 .showSnackBar(snackBar);
                           })
                     },
-                    navigationDelegate: (NavigationRequest request) {
-                      if (request.url.contains('heyjinni.com')) {
-                        return NavigationDecision.navigate;
-                      } else if (request.url
-                          .startsWith('https://www.youtube.com/')) {
-                        print('blocking navigation to $request}');
-                        return NavigationDecision.prevent;
-                      } else {
-                        print('opening external link');
-                        _launchExternalUrl(request.url);
-                        // launchUrl(Uri.parse(request.url));
-                        return NavigationDecision.prevent;
-                      }
-                      print('allowing navigation to $request');
-                      // return NavigationDecision.navigate;
-                    },
+                    // navigationDelegate: (NavigationRequest request) {
+                    //   if (request.url.contains('https://twigo.date/')) {
+                    //     return NavigationDecision.navigate;
+                    //   } else if (request.url
+                    //       .startsWith('https://www.youtube.com/')) {
+                    //     print('blocking navigation to $request}');
+                    //     return NavigationDecision.prevent;
+                    //   } else {
+                    //     print('opening external link');
+                    //     // _launchExternalUrl(request.url);
+                    //     // launchUrl(Uri.parse(request.url));
+                    //     return NavigationDecision.navigate;
+                    //   }
+                    //   print('allowing navigation to $request');
+                    //   // return NavigationDecision.navigate;
+                    // },
                     onProgress: (int progress) {
                       print("WebView is loading (progress : $progress%)");
                       setState(() {
                         _progress = progress / 100;
                         _progressText = progress;
                         // Update progress based on the value received (0-100)
+                        print("::::$_progress");
+                        if(_progress> 0.7){
+                          setState(() {
+                            _isLoading= false;
+                          });
+                        }
                       });
                     },
                     onPageStarted: (String url) {
@@ -198,45 +204,46 @@ class _HomeState extends State<Home> {
                     },
                     onPageFinished: (String url) {
                       print('Page finished loading: $url');
-                      setState(() {
-                        _isLoading =
-                            false; // Set loading state to false when the page finishes loading
-                      });
+                      // setState(() {
+                      //   _isLoading =
+                      //       false; // Set loading state to false when the page finishes loading
+                      // });
                     },
                     gestureNavigationEnabled: true,
                     geolocationEnabled: false,
                     zoomEnabled: true,
                   ),
-                  Visibility(
-                    visible:
-                        _isLoading, // Show the progress indicator only when loading
-                    child: Center(
-                      child: CircularPercentIndicator(
-                        radius: 80.0,
-                        lineWidth: 15.0,
-                        percent: _progress,
-                        center: new Text(
-                          "$_progressText%",
-                          style: TextStyle(
-                              color: MyColors.kprimaryColor, fontSize: 40),
-                        ),
-                        progressColor: MyColors.kprimaryColor,
-                        backgroundColor: Color.fromARGB(255, 104, 204, 247),
-                        circularStrokeCap: CircularStrokeCap.round,
-                      ),
-                    ),
-                    //  CircularProgressIndicator(value: _progress),
-                  ),
+                  // Visibility(
+                  //   visible:
+                  //       _isLoading, // Show the progress indicator only when loading
+                  //   child: Center(
+                  //     child: CircularPercentIndicator(
+                  //       radius: 80.0,
+                  //       lineWidth: 15.0,
+                  //       percent: _progress,
+                  //       center: new Text(
+                  //         "$_progressText%",
+                  //         style: TextStyle(
+                  //             color: MyColors.kprimaryColor, fontSize: 40),
+                  //       ),
+                  //       progressColor: MyColors.kprimaryColor,
+                  //       backgroundColor: Color.fromARGB(255, 104, 204, 247),
+                  //       circularStrokeCap: CircularStrokeCap.round,
+                  //     ),
+                  //   ),
+                  //   //  CircularProgressIndicator(value: _progress),
+                  // ),
+               
                 ],
               ),
-        bottomNavigationBar: _bannerAd != null
-            ? Container(
-                decoration: BoxDecoration(color: Colors.transparent),
-                height: _bannerAd.size.height.toDouble(),
-                width: _bannerAd.size.width.toDouble(),
-                child: AdWidget(ad: _bannerAd),
-              )
-            : SizedBox(),
+        // bottomNavigationBar: _bannerAd != null
+        //     ? Container(
+        //         decoration: BoxDecoration(color: Colors.transparent),
+        //         height: _bannerAd.size.height.toDouble(),
+        //         width: _bannerAd.size.width.toDouble(),
+        //         child: AdWidget(ad: _bannerAd),
+        //       )
+        //     : SizedBox(),
       ),
     );
   }
@@ -273,7 +280,6 @@ class _HomeState extends State<Home> {
       Permission.microphone,
       Permission.phone,
     ].request();
-
     if (statuses[Permission.camera]!.isGranted &&
         statuses[Permission.storage]!.isGranted &&
         statuses[Permission.microphone]!.isGranted &&
@@ -286,18 +292,19 @@ class _HomeState extends State<Home> {
     }
   }
 
-  void _showInterstitalAd() {
-    if (_interstialAd != null) {
-      _interstialAd!.fullScreenContentCallback =
-          FullScreenContentCallback(onAdDismissedFullScreenContent: (ad) {
-        ad.dispose();
-        _createInterstitialAd();
-      }, onAdFailedToShowFullScreenContent: (ad, error) {
-        ad.dispose();
-        _createInterstitialAd();
-      });
-      _interstialAd!.show();
-      _interstialAd = null;
-    }
-  }
+  // void _showInterstitalAd() {
+  //   if (_interstialAd != null) {
+  //     _interstialAd!.fullScreenContentCallback =
+  //         FullScreenContentCallback(onAdDismissedFullScreenContent: (ad) {
+  //       ad.dispose();
+  //       _createInterstitialAd();
+  //     }, onAdFailedToShowFullScreenContent: (ad, error) {
+  //       ad.dispose();
+  //       _createInterstitialAd();
+  //     });
+  //     _interstialAd!.show();
+  //     _interstialAd = null;
+  //   }
+  // }
+
 }

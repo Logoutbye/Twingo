@@ -60,9 +60,9 @@ flutter_icons:
 
 
 flutter_native_splash:
-  background_image: "assets/images/splash.png"
-  # color: "#ffffff"
-  # image: assets/images/splash.png
+  # background_image: "assets/images/splash.png"
+  color: "#ffffff"
+  image: 'assets/images/icon.png'
   android: true
   ios: true
 
