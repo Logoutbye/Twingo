@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Hey Jinni Lite',
+        title: 'Twingo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
