@@ -201,6 +201,7 @@ class _HomeState extends State<Home> {
                         _isLoading =
                             true; // Set loading state to true when a new page starts loading
                       });
+                      
                     },
                     onPageFinished: (String url) {
                       print('Page finished loading: $url');
@@ -208,11 +209,13 @@ class _HomeState extends State<Home> {
                       //   _isLoading =
                       //       false; // Set loading state to false when the page finishes loading
                       // });
+                      
                     },
                     gestureNavigationEnabled: true,
                     geolocationEnabled: false,
                     zoomEnabled: true,
                   ),
+             
                   // Visibility(
                   //   visible:
                   //       _isLoading, // Show the progress indicator only when loading

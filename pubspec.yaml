@@ -47,7 +47,8 @@ dependencies:
   url_launcher: ^6.1.11
   percent_indicator: ^4.2.3
   flutter_inappwebview: ^5.7.2+3
-  flutter_local_notifications: ^14.1.1
+  # flutter_local_notifications: ^14.1.1
+  
   
 dev_dependencies:
   flutter_test:
