@@ -2,12 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:ezeehome_webview/Contrlller/InternetConnectivity.dart';
-import 'package:ezeehome_webview/Contrlller/ad_mob_services.dart';
 import 'package:ezeehome_webview/constants.dart';
+import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_pro/webview_flutter.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -29,6 +27,10 @@ class _HomeState extends State<Home> {
   double _progress = 0.0; // Variable to hold the progress percentage
   bool _isLoading = true;
   int _progressText = 0; // Variable to track loading state
+
+  FacebookBannerAd? facebookBannerAd;
+  //FacebookInterstitialAd? facebookInterstitialAd;
+  bool _isInterstitialAdLoaded = false;
 
   // late BannerAd _bannerAd;
   // InterstitialAd? _interstialAd;
@@ -59,7 +61,21 @@ class _HomeState extends State<Home> {
       WebView.platform = SurfaceAndroidWebView();
     }
     requestPermissions();
+    FacebookAudienceNetwork.init(
+        //testingId: "a77955ee-3304-4635-be65-81029b0f5201", //optional
+        iOSAdvertiserTrackingEnabled: true //default false
+        );
     super.initState();
+
+    if (IsInternetConnected == true) {
+      setState(() {
+        _loadBannerAdd();
+      });
+
+      setState(() {
+        _loadInterstitialAd();
+      });
+    }
     // _createBannerAd();
     // _createInterstitialAd();
   }
@@ -68,7 +84,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-                  // _showInterstitalAd();
+        // _showInterstitalAd();
 
         bool? goBack =
             await _webViewController.future.then((value) => value.canGoBack());
@@ -188,9 +204,9 @@ class _HomeState extends State<Home> {
                         _progressText = progress;
                         // Update progress based on the value received (0-100)
                         print("::::$_progress");
-                        if(_progress> 0.7){
+                        if (_progress > 0.7) {
                           setState(() {
-                            _isLoading= false;
+                            _isLoading = false;
                           });
                         }
                       });
@@ -201,7 +217,6 @@ class _HomeState extends State<Home> {
                         _isLoading =
                             true; // Set loading state to true when a new page starts loading
                       });
-                      
                     },
                     onPageFinished: (String url) {
                       print('Page finished loading: $url');
@@ -209,13 +224,12 @@ class _HomeState extends State<Home> {
                       //   _isLoading =
                       //       false; // Set loading state to false when the page finishes loading
                       // });
-                      
                     },
                     gestureNavigationEnabled: true,
                     geolocationEnabled: false,
                     zoomEnabled: true,
                   ),
-             
+
                   // Visibility(
                   //   visible:
                   //       _isLoading, // Show the progress indicator only when loading
@@ -236,7 +250,6 @@ class _HomeState extends State<Home> {
                   //   ),
                   //   //  CircularProgressIndicator(value: _progress),
                   // ),
-               
                 ],
               ),
         // bottomNavigationBar: _bannerAd != null
@@ -247,6 +260,10 @@ class _HomeState extends State<Home> {
         //         child: AdWidget(ad: _bannerAd),
         //       )
         //     : SizedBox(),
+
+        bottomNavigationBar: Container(
+          child: facebookBannerAd,
+        ),
       ),
     );
   }
@@ -310,4 +327,38 @@ class _HomeState extends State<Home> {
   //   }
   // }
 
+  // facebook add
+  void _loadBannerAdd() {
+    facebookBannerAd = FacebookBannerAd(
+      placementId: Platform.isAndroid
+          ? "323745273316409_323745829983020"
+          : "1450991599021523_1450992009021482",
+      bannerSize: BannerSize.STANDARD,
+      listener: (result, vale) {
+        print("lister:");
+      },
+    );
+  }
+
+  void _loadInterstitialAd() {
+    FacebookInterstitialAd.loadInterstitialAd(
+      // placementId: "YOUR_PLACEMENT_ID",
+      placementId: Platform.isAndroid
+          ? "323745273316409_323745926649677"
+          : "1450991599021523_1451005752353441",
+      listener: (result, value) {
+        print(">> FAN > Interstitial Ad: $result --> $value");
+        if (result == InterstitialAdResult.LOADED)
+          _isInterstitialAdLoaded = true;
+
+        /// Once an Interstitial Ad has been dismissed and becomes invalidated,
+        /// load a fresh Ad by calling this function.
+        if (result == InterstitialAdResult.DISMISSED &&
+            value["invalidated"] == true) {
+          _isInterstitialAdLoaded = false;
+          _loadInterstitialAd();
+        }
+      },
+    );
+  }
 }
