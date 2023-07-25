@@ -11,7 +11,7 @@
    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
    <!-- Add more permission entries as needed -->
    <application
-        android:label="Twingo"
+        android:label="Twigo"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
