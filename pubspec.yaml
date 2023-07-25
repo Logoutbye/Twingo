@@ -48,6 +48,7 @@ dependencies:
   percent_indicator: ^4.2.3
   flutter_inappwebview: ^5.7.2+3
   # flutter_local_notifications: ^14.1.1
+  facebook_audience_network: ^1.0.1
   
   
 dev_dependencies:
